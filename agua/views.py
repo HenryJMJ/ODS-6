@@ -137,6 +137,7 @@ def proyecto_comunidad(request, proyecto_id):
     except Exception as e:
         logger.error(f"Error en proyecto_comunidad: {str(e)}")
         return HttpResponseServerError("Error interno. Contacte al administrador.")
+    
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def usuarios_registrados(request):

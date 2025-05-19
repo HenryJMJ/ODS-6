@@ -17,7 +17,7 @@
     <div class="alert alert-success">
         <strong>{{ idea_mas_gustada.usuario.username }} 👑</strong>: {{ idea_mas_gustada.contenido }} <br>
         <small class="text-muted">{{ idea_mas_gustada.fecha|date:"d/m/Y H:i" }}</small><br>
-        <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta }}</span>
+        <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta|default:idea_mas_gustada.me_gusta.count }}</span>
     </div>
 {% endif %}
 
@@ -48,7 +48,7 @@
                 {% endif %}
 
                 <!-- Mostrar el total de "me gusta" -->
-                <p>{{ idea.total_me_gusta }} me gusta</p>
+                <p>{{ idea.total_me_gusta|default:idea.me_gusta.count }} me gusta</p>
 
                 {% if idea.usuario == request.user %}
                     <div class="mt-1">

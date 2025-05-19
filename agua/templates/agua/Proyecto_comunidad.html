@@ -19,7 +19,7 @@
             <p class="card-text">{{ idea_mas_gustada.contenido }}</p>
             <small class="text-muted">Publicada el {{ idea_mas_gustada.fecha|date:"d/m/Y H:i" }}</small><br>
             <button class="btn btn-outline-success btn-sm mt-2" style="border-color: green; pointer-events: none;">
-                <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta }}</span>
+                <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta|default:idea_mas_gustada.me_gusta_count }}</span>
             </button>
         </div>
     </div>

@@ -38,5 +38,6 @@ class IdeaUsuario(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     me_gusta = models.ManyToManyField(User, related_name='me_gusta_ideas', blank=True)  # Relación de 'me gusta'
 
-    def total_me_gusta(self):
+    @property
+    def me_gusta_count(self):
         return self.me_gusta.count()
