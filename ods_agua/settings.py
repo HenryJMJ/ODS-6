@@ -56,7 +56,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'agua.context_processors.notificaciones_context',
-                'whitenoise.middleware.WhiteNoiseMiddleware',
             ],
         },
     },
