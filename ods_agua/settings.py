@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-+q=*yq2ixrdw*p$8rpop9*vs62ux9v)yl^al41ek0h5k074$5y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,.onrender.com').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,agua-limpia-and-sanemaiento.onrender.com').split(',')
 
 # Application definition
 
@@ -56,6 +56,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'agua.context_processors.notificaciones_context',
+                'whitenoise.middleware.WhiteNoiseMiddleware',
             ],
         },
     },
