@@ -1,0 +1,69 @@
+{% extends 'agua/base_admin.html' %}
+{% block content %}
+<h2 class="mb-4">Panel de Administración</h2>
+
+<h3>Mensajes No Respondidos</h3>
+{% if mensajes_no_responder %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Mensaje</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for msg in mensajes_no_responder %}
+        <tr>
+            <td>{{ msg.nombre }}</td>
+            <td>{{ msg.email }}</td>
+            <td>{{ msg.mensaje }}</td>
+            <td>{{ msg.fecha|date:"d/m/Y H:i" }}</td>
+            <td>
+                <a href="{% url 'eliminar_mensaje' msg.id %}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Seguro que deseas eliminar este mensaje?');">Eliminar</a>
+                <a href="{% url 'responder_mensaje' msg.id %}" class="btn btn-info btn-sm">Responder</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay mensajes no respondidos.</p>
+{% endif %}
+
+<h3>Mensajes Respondidos</h3>
+{% if mensajes_respondidos %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Mensaje</th>
+            <th>Fecha</th>
+            <th>Respuesta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for msg in mensajes_respondidos %}
+        <tr>
+            <td>{{ msg.nombre }}</td>
+            <td>{{ msg.email }}</td>
+            <td>{{ msg.mensaje }}</td>
+            <td>{{ msg.fecha|date:"d/m/Y H:i" }}</td>
+            <td>{{ msg.respuesta }}</td>
+            <td>
+                <a href="{% url 'eliminar_mensaje' msg.id %}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Seguro que deseas eliminar este mensaje?');">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No hay mensajes respondidos.</p>
+{% endif %}
+{% endblock %}

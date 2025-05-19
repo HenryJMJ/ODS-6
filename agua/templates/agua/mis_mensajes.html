@@ -1,0 +1,38 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h4 class="mt-5">Tus Mensajes de Contacto</h4>
+
+<div class="table-responsive rounded shadow-sm">
+    <table class="table table-striped table-hover table-bordered align-middle">
+        <thead class="table-primary text-center">
+            <tr>
+                <th scope="col">📅 Fecha</th>
+                <th scope="col">✉️ Mensaje</th>
+                <th scope="col">📌 Respondido</th>
+                <th scope="col">📝 Respuesta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mensaje in mensajes %}
+            <tr>
+                <td>{{ mensaje.fecha|date:"d/m/Y H:i" }}</td>
+                <td>{{ mensaje.mensaje }}</td>
+                <td class="text-center">
+                    {% if mensaje.respondido %}
+                        <span class="badge bg-success">Sí</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </td>
+                <td>{{ mensaje.respuesta|default:"Aún sin respuesta" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">No has enviado ningún mensaje todavía.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

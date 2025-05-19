@@ -1,0 +1,25 @@
+{% extends 'agua/base.html' %}
+{% block content %}
+{% load static %}
+  <h2>¿Qué es el ODS 6?</h2>
+  <p>El Objetivo de Desarrollo Sostenible número 6 busca asegurar el acceso universal y equitativo al agua potable y a servicios de saneamiento e higiene adecuados.</p>
+
+  <h3>Metas del ODS 6:</h3>
+  <ul>
+      <li>Acceso universal a agua potable segura y asequible.</li>
+      <li>Acceso a servicios de saneamiento e higiene adecuados.</li>
+      <li>Mejora de la calidad del agua reduciendo la contaminación.</li>
+      <li>Uso eficiente del agua en todos los sectores.</li>
+      <li>Gestión integrada de los recursos hídricos.</li>
+  </ul>
+
+  <h3>Datos Relevantes</h3>
+  <ul>
+    <li>Más de 2 mil millones de personas carecen de acceso a agua potable segura.</li>
+    <li>El 80% de las enfermedades en países en desarrollo están relacionadas con el agua contaminada.</li>
+    <li>Se desperdicia aproximadamente un 30% del agua potable a nivel global.</li>
+  </ul>
+
+  <img src="{% static 'agua/img/ImportanciaODS6.jpg' %}" alt="ODS 6" class="img-fluid rounded shadow mb-4" style="max-width: 100%; height: auto;">
+
+{% endblock %}

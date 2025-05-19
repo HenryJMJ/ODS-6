@@ -1,0 +1,10 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h3>Contactanos</h3>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+</form>
+{% endblock %}

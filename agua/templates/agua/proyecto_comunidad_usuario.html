@@ -1,0 +1,92 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h2>{{ proyecto.nombre }}</h2>
+<p><strong>Descripción:</strong> {{ proyecto.descripcion }}</p>
+
+<hr>
+
+<h3>💡 Idea Principal del Administrador</h3>
+<div class="alert alert-info">
+    {{ proyecto.idea_principal|default:"El administrador aún no ha publicado una idea principal." }}
+</div>
+
+{% if idea_mas_gustada %}
+    <hr>
+    <h3 class="text-success">♥ Idea más gustada de la comunidad</h3>
+    <div class="alert alert-success">
+        <strong>{{ idea_mas_gustada.usuario.username }} 👑</strong>: {{ idea_mas_gustada.contenido }} <br>
+        <small class="text-muted">{{ idea_mas_gustada.fecha|date:"d/m/Y H:i" }}</small><br>
+        <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta }}</span>
+    </div>
+{% endif %}
+
+{% if request.user in proyecto.miembros.all %}
+    <hr>
+    <h3>🗣 Tus Ideas</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Publicar Idea</button>
+    </form>
+
+    <hr>
+
+    <h4>💬 Ideas de la Comunidad</h4>
+    <ul class="list-group">
+        {% for idea in ideas %}
+            <li class="list-group-item">
+                <strong>{{ idea.usuario.username }}</strong>: {{ idea.contenido }} <br>
+                <small class="text-muted">{{ idea.fecha|date:"d/m/Y H:i" }}</small>
+                
+                <!-- Botón para marcar "me gusta" -->
+                {% if request.user in idea.me_gusta.all %}
+                    <a href="{% url 'marcar_me_gusta' proyecto.id idea.id %}" class="btn btn-success btn-sm">💚 Me gusta</a>
+                {% else %}
+                    <a href="{% url 'marcar_me_gusta' proyecto.id idea.id %}" class="btn btn-outline-success btn-sm">♥ Me gusta</a>
+                {% endif %}
+
+                <!-- Mostrar el total de "me gusta" -->
+                <p>{{ idea.total_me_gusta }} me gusta</p>
+
+                {% if idea.usuario == request.user %}
+                    <div class="mt-1">
+                        <a href="{% url 'editar_idea' proyecto.id idea.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <!-- Botón de eliminar con confirmación -->
+                        <button class="btn btn-sm btn-danger" onclick="eliminarIdea({{ proyecto.id }}, {{ idea.id }})">Eliminar</button>
+                    </div>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">Aún no hay ideas publicadas.</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-warning mt-4">
+        ⚠️ Debes unirte a este proyecto para ver y publicar ideas.
+    </div>
+{% endif %}
+
+<script>
+    function eliminarIdea(proyectoId, ideaId) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta idea?')) {
+            fetch(`/proyecto/${proyectoId}/idea/${ideaId}/eliminar/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();  // Recarga la página después de eliminar
+                } else {
+                    alert('No se pudo eliminar la idea.');
+                }
+            });
+        }
+    }
+</script>
+
+<a href="{% url 'proyectos_disponibles' %}" class="btn btn-secondary mt-3">⬅ Proyectos</a>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'agua/base.html' %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    body {
+        background: url("{% static 'agua/img/tortuga.jpg' %}") no-repeat center center fixed;
+        background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+        background-attachment: fixed; /* Fija la imagen al fondo mientras se hace scroll */
+        background-position: center center; /* Centra la imagen */
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        background: rgba(0, 0, 0, 0.6); /* Fondo oscuro con transparencia */
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        color: #fff;
+    }
+
+    .login-header {
+        background-color: rgba(0, 188, 212, 0.8);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .login-header i {
+        font-size: 2rem;
+    }
+
+    .login-body {
+        padding: 30px;
+    }
+
+    .login-body label {
+        color: #e0f7fa;
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.3); /* Fondo semi-transparente */
+        color: #fff; /* Texto blanco */
+        border: 1px solid rgba(255, 255, 255, 0.6); /* Borde blanco y sutil */
+        border-radius: 8px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.4); /* Efecto al hacer foco */
+        background-color: rgba(255, 255, 255, 0.5); /* Fondo más opaco al enfocarse */
+    }
+
+    .login-footer {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #b2ebf2;
+    }
+
+    .login-footer a {
+        color: #4dd0e1;
+        text-decoration: none;
+    }
+
+    .btn-info {
+        background-color: #00bcd4;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: #0097a7;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-header">
+        <i class="bi bi-droplet-fill"></i>
+        <h4 class="mt-2">Iniciar Sesión</h4>
+    </div>
+    <div class="login-body">
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Nombre de usuario</label>
+                <input type="text" name="username" class="form-control" id="id_username" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Contraseña</label>
+                <input type="password" name="password" class="form-control" id="id_password" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-info text-white">Entrar</button>
+            </div>
+        </form>
+    </div>
+    <div class="login-footer">
+        🌊 Proyecto Agua Limpia y Saneamiento
+    </div>
+    <div class="login-footer">
+        ¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a>
+    </div>
+</div>
+
+{% endblock %}

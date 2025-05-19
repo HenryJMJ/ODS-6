@@ -1,0 +1,46 @@
+{% extends 'agua/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="text-center">
+    <h1>ODS 6: Agua Limpia y Saneamiento</h1>
+    <p>Garantizar la disponibilidad de agua y su gestión sostenible para todos.</p>
+    <img src="{% static 'agua/img/ODS6.jpg' %}" alt="Imagen representativa del ODS 6 Agua Limpia y Saneamiento" class="img-fluid rounded shadow mb-4" style="max-width: 20%; height: auto;">
+    <p>Más de 2 mil millones de personas en el mundo no tienen acceso a agua potable segura. La contaminación de ríos y fuentes naturales agrava esta crisis. Es momento de actuar juntos.</p>
+    <a href="/que-es/" class="btn btn-primary mt-3">Descubre Más</a>
+  </div>
+
+<!-- Video embebido -->
+<div class="d-flex justify-content-center mb-4 mt-5">
+  <div class="ratio ratio-16x9 mb-4 mt-5" style="max-width: 900px; margin:auto;">
+    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/6kke9YIohQQ" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Testimonio / Cita -->
+<div class="blockquote text-center my-5">
+  <p class="mb-3 fst-italic">"El acceso al agua potable es un derecho humano fundamental que debe ser garantizado para todos."</p>
+  <footer class="blockquote-footer">Dra. Jane Doe, <cite title="Experta en Recursos Hídricos">Experta en Recursos Hídricos</cite></footer>
+</div>
+
+  <div class="card mb-4 mt-5">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0">Noticias Recientes sobre el ODS 6</h5>
+    </div>
+    <div class="card-body">
+      {% if noticias %}
+        <ul class="list-group list-group-flush">
+          {% for noticia in noticias %}
+          <li class="list-group-item">
+            <a href="{{ noticia.enlace }}" target="_blank"><strong>{{ noticia.titulo }}</strong></a><br>
+            <small>{{ noticia.fecha|date:"d M, Y" }}</small>
+            <p>{{ noticia.descripcion }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No se encontraron noticias sobre el ODS 6.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

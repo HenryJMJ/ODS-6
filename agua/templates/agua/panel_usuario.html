@@ -1,0 +1,26 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h2 class="mb-4">Bienvenido al Panel de Usuario</h2>
+
+<div class="card mb-4">
+  <div class="card-header bg-success text-white">
+    <h5 class="mb-0">Noticias Recientes sobre el ODS 6</h5>
+  </div>
+  <div class="card-body">
+    {% if noticias %}
+      <ul class="list-group list-group-flush">
+        {% for noticia in noticias %}
+        <li class="list-group-item">
+          <a href="{{ noticia.enlace }}" target="_blank"><strong>{{ noticia.titulo }}</strong></a><br>
+          <small>{{ noticia.fecha }}</small>
+          <p>{{ noticia.descripcion }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se encontraron noticias sobre el ODS 6.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

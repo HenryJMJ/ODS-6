@@ -1,0 +1,128 @@
+{% extends 'agua/base.html' %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    body {
+        background: url("{% static 'agua/img/agua.jpg' %}") no-repeat center center fixed;
+        background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+        background-attachment: fixed; /* Fija la imagen al fondo mientras se hace scroll */
+        background-position: center center; /* Centra la imagen */
+    }
+
+    .register-container {
+        max-width: 450px;
+        margin: 60px auto;
+        background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra oscura */
+        padding: 20px;
+    }
+
+    .register-header {
+        background-color: rgba(0, 188, 212, 0.8); /* Fondo semi-transparente */
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 15px;
+    }
+
+    .register-header i {
+        font-size: 2rem;
+    }
+
+    .register-body {
+        padding: 20px;
+    }
+
+    .register-body label {
+        color: #e0f7fa; /* Texto claro */
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.2); /* Fondo oscuro pero con un toque de transparencia */
+        color: #fff; /* Texto blanco */
+        border: 1px solid rgba(255, 255, 255, 0.6); /* Borde blanco sutil */
+        border-radius: 8px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.4); /* Efecto al hacer foco */
+        background-color: rgba(255, 255, 255, 0.3); /* Fondo más opaco al enfocarse */
+    }
+
+    .register-footer {
+        background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro y semi-transparente */
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #b2ebf2;
+    }
+
+    .register-footer a {
+        color: #4dd0e1;
+        text-decoration: none;
+    }
+
+    .btn-info {
+        background-color: #00bcd4;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: #0097a7;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-header">
+        <i class="bi bi-person-plus-fill"></i>
+        <h4 class="mt-2">Registro</h4>
+    </div>
+    <div class="register-footer">
+        Es hora de cambiar el mundo, registrate ya!
+    </div>
+    <div class="register-body">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico</label>
+                {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña</label>
+                {{ form.password }}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.password2.id_for_label }}" class="form-label">Confirmar contraseña</label>
+                {{ form.password2 }}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-info text-white">Registrarse</button>
+            </div>
+        </form>
+    </div>
+    <div class="register-footer">
+        ¿Ya tienes cuenta? <a href="{% url 'login' %}" class="text-info">Inicia sesión</a>
+    </div>
+</div>
+{% endblock %}

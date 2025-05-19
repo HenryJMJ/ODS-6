@@ -1,0 +1,11 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h2>Editar Idea</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a href="{% url 'proyecto_comunidad_usuario' proyecto_id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

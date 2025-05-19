@@ -1,0 +1,85 @@
+{% extends 'agua/base_admin.html' %}
+
+{% block content %}
+<h2>{{ proyecto.nombre }} - Comunidad</h2>
+
+<p><strong>Descripción:</strong> {{ proyecto.descripcion }}</p>
+
+{% if proyecto.idea_principal %}
+    <p><strong>Idea Principal del Proyecto:</strong> {{ proyecto.idea_principal }}</p>
+{% else %}
+    <p><em>Este proyecto aún no tiene una idea principal.</em></p>
+{% endif %}
+
+{% if idea_mas_gustada %}
+    <h3 class="mt-4 text-success">♥ Idea más gustada de la comunidad</h3>
+    <div class="card mb-3 border-success">
+        <div class="card-body">
+            <h5 class="card-title">{{ idea_mas_gustada.usuario.username }}</h5>
+            <p class="card-text">{{ idea_mas_gustada.contenido }}</p>
+            <small class="text-muted">Publicada el {{ idea_mas_gustada.fecha|date:"d/m/Y H:i" }}</small><br>
+            <button class="btn btn-outline-success btn-sm mt-2" style="border-color: green; pointer-events: none;">
+                <span class="text-success">♥ {{ idea_mas_gustada.total_me_gusta }}</span>
+            </button>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+    .idea-mas-gustada {
+        background-color: #ffeb99 !important; /* Color dorado */
+        border: 2px solid gold;
+        border-radius: 6px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        animation: pulsar 2s ease-in-out forwards; /* Efecto de pulsado durante 2 segundos */
+    }
+
+    /* Animación de pulsado */
+    @keyframes pulsar {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    }
+</style>
+
+<h3>💡 Ideas de la Comunidad</h3>
+<ul class="list-group">
+    {% for idea in ideas %}
+        {% if idea_mas_gustada and idea.id == idea_mas_gustada.id %}
+            <li class="list-group-item idea-mas-gustada">
+                <strong>{{ idea.usuario.username }} 👑</strong>: {{ idea.contenido }}<br>
+                <small class="text-muted">{{ idea.fecha|date:"d/m/Y H:i" }}</small><br>
+                <button class="btn btn-outline-success btn-sm mt-1" style="border-color: green; pointer-events: none;">
+                    <span class="text-success">♥ {{ idea.total_me_gusta }}</span>
+                </button>
+            </li>
+        {% else %}
+            <li class="list-group-item">
+                <strong>{{ idea.usuario.username }}</strong>: {{ idea.contenido }}<br>
+                <small class="text-muted">{{ idea.fecha|date:"d/m/Y H:i" }}</small><br>
+                {% if idea.total_me_gusta > 0 %}
+                    <button class="btn btn-outline-success btn-sm mt-1" style="border-color: green; pointer-events: none;">
+                        <span class="text-success">♥ {{ idea.total_me_gusta }}</span>
+                    </button>
+                {% else %}
+                    <button class="btn btn-outline-success btn-sm mt-1" style="pointer-events: none;">
+                        <span class="text-muted">♥ {{ idea.total_me_gusta }}</span>
+                    </button>
+                {% endif %}
+            </li>
+        {% endif %}
+    {% empty %}
+        <li class="list-group-item">Aún no hay ideas publicadas por la comunidad.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

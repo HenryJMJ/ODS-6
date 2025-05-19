@@ -1,0 +1,52 @@
+{% extends 'agua/base_admin.html' %}
+
+{% block content %}
+<h2>🔔 Notificaciones</h2>
+
+<h4 class="mt-4">
+    Usuarios Recientemente Registrados
+    {{ usuarios_no_leidos }}  <!-- Verifica si este número es correcto -->
+    {% if usuarios_no_leidos > 0 %}
+        <span class="badge bg-danger">{{ usuarios_no_leidos }}</span>
+    {% endif %}
+</h4>
+<ul class="list-group">
+    {% for usuario in nuevos_usuarios %}
+        <li class="list-group-item {% if usuario.usuarioleido.leido %}bg-light{% endif %}">
+            {{ usuario.username }} - {{ usuario.email }} - {{ usuario.date_joined|date:"d M Y H:i" }}
+            
+            {% if not usuario.usuarioleido.leido %}
+                <a href="{% url 'marcar_usuario_leido' usuario.id %}" class="btn btn-sm btn-success ms-3">Marcar como leído</a>
+            {% else %}
+                <span class="badge bg-secondary ms-3">Leído</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li class="list-group-item">No hay usuarios nuevos.</li>
+    {% endfor %}
+</ul>
+<h4 class="mt-4">
+    Mensajes Recientes
+    {% if mensajes_no_respondidos > 0 %}
+        <span class="badge bg-danger">{{ mensajes_no_respondidos }}</span>  <!-- Notificación de mensajes no respondidos -->
+    {% endif %}
+</h4>
+<ul class="list-group">
+    {% for mensaje in mensajes %}
+        <li class="list-group-item {% if mensaje.respondido %}bg-light{% endif %}">
+            <strong>{{ mensaje.nombre }}</strong> ({{ mensaje.email }})<br>
+            {{ mensaje.mensaje }}<br>
+            <small>{{ mensaje.fecha|date:"d M Y H:i" }}</small>
+            
+            {% if not mensaje.respondido %}
+                <a href="{% url 'marcar_mensaje_leido' mensaje.id %}" class="btn btn-sm btn-success ms-3">Marcar como leído</a>
+            {% else %}
+                <span class="badge bg-secondary ms-3">Leído</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li class="list-group-item">No hay mensajes recientes.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'agua/base_usuario.html' %}
+
+{% block content %}
+<h2>Proyectos Disponibles</h2>
+<ul>
+    {% for proyecto in proyectos %}
+        <li>
+            <strong>{{ proyecto.nombre }}</strong>: {{ proyecto.descripcion }}<br>
+
+            <!-- Botones de acción -->
+            {% if proyecto in proyectos_unidos %}
+                ✅ Ya unido
+                <a href="{% url 'unirse_o_salir_proyecto' proyecto.id %}" class="btn btn-danger btn-sm">Salir</a>
+            {% else %}
+                <a href="{% url 'unirse_o_salir_proyecto' proyecto.id %}" class="btn btn-primary btn-sm">Unirse</a>
+            {% endif %}
+
+            <a href="{% url 'proyecto_comunidad_usuario' proyecto.id %}" class="btn btn-info btn-sm">Ver Comunidad</a>
+        </li>
+    {% empty %}
+        <li>No hay proyectos disponibles.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Proyectos Unido</h3>
+<ul>
+    {% for proyecto in proyectos_unidos %}
+        <li>
+            <strong>{{ proyecto.nombre }}</strong>: {{ proyecto.descripcion }}<br>
+            <a href="{% url 'unirse_o_salir_proyecto' proyecto.id %}" class="btn btn-danger btn-sm">Salir</a>
+            <a href="{% url 'proyecto_comunidad_usuario' proyecto.id %}" class="btn btn-info btn-sm">Ver Comunidad</a>
+        </li>
+    {% empty %}
+        <li>No te has unido a ningún proyecto.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends 'agua/base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ODS 6 - Agua Limpia y Saneamiento</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .grafico-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 30px;
+    }
+    .grafico {
+      width: 30%;
+      min-width: 300px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .boton-expandir {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 900px;
+      text-align: center;
+      position: relative;
+    }
+    .modal canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+    .cerrar-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>ODS 6: Agua Limpia y Saneamiento (2015-2025)</h1>
+
+  <h2>Datos Globales</h2>
+  <div class="grafico-container">
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('aguaGlobalChart')">⬆</button>
+      <canvas id="aguaGlobalChart"></canvas>
+    </div>
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('saneamientoGlobalChart')">⬆</button>
+      <canvas id="saneamientoGlobalChart"></canvas>
+    </div>
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('higieneGlobalChart')">⬆</button>
+      <canvas id="higieneGlobalChart"></canvas>
+    </div>
+  </div>
+
+  <h2>Datos por Continente</h2>
+  <div class="grafico-container">
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('aguaContinentesChart')">⬆</button>
+      <canvas id="aguaContinentesChart"></canvas>
+    </div>
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('saneamientoContinentesChart')">⬆</button>
+      <canvas id="saneamientoContinentesChart"></canvas>
+    </div>
+    <div class="grafico">
+      <button class="boton-expandir" onclick="expandirGrafico('higieneContinentesChart')">⬆</button>
+      <canvas id="higieneContinentesChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Modal para gráfico ampliado -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button class="cerrar-modal" onclick="cerrarModal()">X</button>
+      <canvas id="graficoAmpliado"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const years = Array.from({length: 11}, (_, i) => 2015 + i);
+
+    const aguaGlobal = [89, 90, 91, 92, 93, 93.5, 94, 94.5, 95, 95.5, 96];
+    const saneamientoGlobal = [70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80];
+    const higieneGlobal = [60, 62, 64, 66, 68, 69, 70, 71, 72, 73, 74];
+
+    const aguaContinentesData = [
+      [60,62,64,66,68,70,72,74,75,76,78],
+      [85,86,87,88,89,90,91,92,93,94,95],
+      [92,92.5,93,93.5,94,94.5,95,95.2,95.5,95.8,96],
+      [98,98.2,98.4,98.5,98.6,98.7,98.8,98.9,99,99.1,99.2],
+      [95,95.1,95.2,95.3,95.4,95.5,95.6,95.7,95.8,95.9,96]
+    ];
+
+    const saneamientoContinentesData = [
+      [30,32,34,36,38,40,42,44,46,48,50],
+      [60,62,64,66,68,70,72,74,76,78,80],
+      [75,76,77,78,79,80,81,82,83,84,85],
+      [90,90.5,91,91.5,92,92.5,93,93.5,94,94.5,95],
+      [70,71,72,73,74,75,76,77,78,79,80]
+    ];
+
+    const higieneContinentesData = [
+      [20,22,24,26,28,30,32,34,36,38,40],
+      [40,42,44,46,48,50,52,54,56,58,60],
+      [55,56,57,58,59,60,61,62,63,64,65],
+      [80,81,82,83,84,85,86,87,88,89,90],
+      [65,66,67,68,69,70,71,72,73,74,75]
+    ];
+
+    const charts = {};
+
+    const createBarChart = (ctxId, labels, data, label, color) => {
+      const ctx = document.getElementById(ctxId).getContext('2d');
+      charts[ctxId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: label,
+            data: data,
+            backgroundColor: color
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: label
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: value => value + "%"
+              }
+            }
+          }
+        }
+      });
+    };
+
+    const transformarDatosPorContinente = (datos) => {
+      const continentes = ['África', 'Asia', 'América', 'Europa', 'Oceanía'];
+      const colores = ['#4CAF50', '#FF5722', '#FFEB3B', '#2196F3', '#9C27B0'];
+      return continentes.map((nombre, i) => ({
+        label: nombre,
+        data: datos[i],
+        backgroundColor: colores[i]
+      }));
+    };
+
+    const createGroupBarChart = (ctxId, labels, datos, titulo) => {
+      const ctx = document.getElementById(ctxId).getContext('2d');
+      charts[ctxId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: transformarDatosPorContinente(datos)
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: titulo
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: value => value + "%"
+              }
+            }
+          }
+        }
+      });
+    };
+
+    function expandirGrafico(idCanvasOriginal) {
+      const modal = document.getElementById("modal");
+      const canvasModal = document.getElementById("graficoAmpliado");
+      if (charts['graficoAmpliado']) {
+        charts['graficoAmpliado'].destroy();
+      }
+
+      const original = charts[idCanvasOriginal];
+      const newData = JSON.parse(JSON.stringify(original.data));
+      const newOptions = JSON.parse(JSON.stringify(original.options));
+      const tipo = original.config.type;
+
+      charts['graficoAmpliado'] = new Chart(canvasModal.getContext('2d'), {
+        type: tipo,
+        data: newData,
+        options: newOptions
+      });
+
+      modal.style.display = "block";
+    }
+
+    function cerrarModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    // Cargar todos los gráficos
+    createBarChart('aguaGlobalChart', years, aguaGlobal, 'Acceso Global a Agua Potable (%)', '#2196F3');
+    createBarChart('saneamientoGlobalChart', years, saneamientoGlobal, 'Acceso Global a Saneamiento (%)', '#4CAF50');
+    createBarChart('higieneGlobalChart', years, higieneGlobal, 'Acceso Global a Higiene Básica (%)', '#FF9800');
+
+    createGroupBarChart('aguaContinentesChart', years, aguaContinentesData, 'Agua Potable por Continente (%)');
+    createGroupBarChart('saneamientoContinentesChart', years, saneamientoContinentesData, 'Saneamiento por Continente (%)');
+    createGroupBarChart('higieneContinentesChart', years, higieneContinentesData, 'Higiene por Continente (%)');
+  </script>
+</body>
+</html>
+{% endblock %}
