@@ -134,13 +134,17 @@ EMAIL_ENCODING = 'utf-8'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Está bien si solo hay uno
+
+# Solo para desarrollo: dónde buscar archivos estáticos (como imágenes, CSS, etc.)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Para producción (Render o colectar archivos con collectstatic)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Para servir archivos estáticos comprimidos en producción (Render, etc.)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
