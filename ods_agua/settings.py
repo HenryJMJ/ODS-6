@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ods_agua.urls'
@@ -134,17 +135,8 @@ EMAIL_ENCODING = 'utf-8'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 STATIC_URL = '/static/'
-
-# Solo para desarrollo: dónde buscar archivos estáticos (como imágenes, CSS, etc.)
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
-# Para producción (Render o colectar archivos con collectstatic)
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Para servir archivos estáticos comprimidos en producción (Render, etc.)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
