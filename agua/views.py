@@ -112,32 +112,26 @@ def eliminar_proyecto(request, proyecto_id):
     messages.success(request, 'Proyecto eliminado correctamente.')
     return redirect('crear_proyecto')
 
-from django.http import HttpResponseServerError
-import logging
-logger = logging.getLogger(__name__)
-
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def proyecto_comunidad(request, proyecto_id):
-    try:
-        proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
-        if not request.user.is_superuser:
-            return redirect('proyectos_disponibles')
+    if not request.user.is_superuser:
+        return redirect('proyectos_disponibles')
 
-        ideas = proyecto.ideas.all().annotate(total_me_gusta=Count('me_gusta')).order_by('-total_me_gusta')
-        idea_mas_gustada = ideas.first()
+    # Obtener las ideas ordenadas por la cantidad de 'me gusta' de mayor a menor
+    ideas = proyecto.ideas.all().annotate(total_me_gusta=Count('me_gusta')).order_by('-total_me_gusta')
 
-        return render(request, 'agua/proyecto_comunidad.html', {
-            'proyecto': proyecto,
-            'idea_mas_gustada': idea_mas_gustada,
-            'ideas': ideas
-        })
+    # Obtener la idea más gustada
+    idea_mas_gustada = ideas.first()  # Ya está ordenada, así que la primera es la más gustada
 
-    except Exception as e:
-        logger.error(f"Error en proyecto_comunidad: {str(e)}")
-        return HttpResponseServerError("Error interno. Contacte al administrador.")
-    
+    return render(request, 'agua/proyecto_comunidad.html', {
+        'proyecto': proyecto,
+        'idea_mas_gustada': idea_mas_gustada,
+        'ideas': ideas  # Pasamos el queryset ordenado a la plantilla
+    })
+
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def usuarios_registrados(request):
