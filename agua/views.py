@@ -126,7 +126,7 @@ def proyecto_comunidad(request, proyecto_id):
     # Obtener la idea más gustada
     idea_mas_gustada = ideas.first()  # Ya está ordenada, así que la primera es la más gustada
 
-    return render(request, 'agua/proyecto_comunidad.html', {
+    return render(request, 'agua/Proyecto_comunidad.html', {
         'proyecto': proyecto,
         'idea_mas_gustada': idea_mas_gustada,
         'ideas': ideas  # Pasamos el queryset ordenado a la plantilla
